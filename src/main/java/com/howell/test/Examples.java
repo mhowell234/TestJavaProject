@@ -23,6 +23,7 @@ public class Examples {
     private static final String ID = "ID";
     private static final String NAME = "NAME";
     private static final String PHOTO_URL = "http://somewhere";
+    private static final String ALIAS = "ALIAS";
 
     private final Pojo pojo;
 
@@ -42,7 +43,7 @@ public class Examples {
     // psvm
     public static void main(String[] args) throws Exception {
 
-        final Player player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL);
+        final Player player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL).alias(ALIAS);
         final Pojo pojo = Pojo.builder().aString("A").aBool(true).anInt(4).player(player).build();
 
         Examples examples = new Examples(pojo);
