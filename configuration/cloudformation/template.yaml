@@ -1,0 +1,252 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test Template.
+
+Resources:
+
+  ##
+  # Roles
+  ##
+
+  LambdaStreamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:*
+            - kinesis:*
+            - logs:*
+            - sqs:*
+            Resource: "*"
+
+  StepFunctionsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - Fn::Sub: "states.${AWS::Region}.amazonaws.com"
+          Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+      - PolicyName: StepFunctionsExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - "lambda:InvokeFunction"
+            Resource: "*"
+
+  ##
+  # Dynamo
+  ##
+
+  TestTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Test
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+        - AttributeName: LastUpdated
+          AttributeType: S
+
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+        - AttributeName: LastUpdated
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  ##
+  # SQS
+  ##
+
+  TestSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: TestQueue
+
+  ##
+  # SNS
+  ##
+
+  TestSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: TestTopic
+      Subscription:
+        - Endpoint:
+            Fn::GetAtt: [TestSqsQueue, Arn]
+          Protocol: sqs
+
+  ##
+  # Lambdas
+  ##
+
+  TestLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs4.3
+      Role:
+        Fn::GetAtt: [LambdaStreamRole, Arn]
+      Code:
+        ZipFile:
+          Fn::Sub: |-
+            exports.handler = function(event, context, callback) {
+                console.log('hello world!');
+                callback(null, "hello world success");
+            };
+      DeadLetterConfig:
+        TargetArn:
+          Fn::GetAtt: [TestSqsQueue, Arn]
+
+  ##
+  # Kinesis
+  ##
+
+  TestStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: TestStream
+      ShardCount: 1
+
+  ##
+  # Lambda Mapping
+  ##
+
+  TestEventSource:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName:
+        {Ref: TestLambda}
+      Enabled: true
+      EventSourceArn:
+        Fn::GetAtt: [TestStream, Arn]
+      StartingPosition: TRIM_HORIZON
+
+  ##
+  # Step Functions
+  ##
+
+  TestStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        Fn::Sub:
+        - |-
+          {
+            "Comment": "A Hello World AWL example using an AWS Lambda Function",
+            "StartAt": "Wait",
+            "States": {
+              "Wait": {
+                "Type": "Wait",
+                "Seconds": 5,
+                "Next": "Parallel"
+              },
+              "Parallel": {
+                "Type": "Parallel",
+                "Branches": [
+                  {
+                    "StartAt": "HelloWorld1",
+                    "States": {
+                      "HelloWorld1": {
+                        "Type": "Task",
+                        "Resource": "${lambdaArn}",
+                        "End": true
+                      }
+                    }
+                  },
+                  {
+                    "StartAt": "HelloWorld2",
+                    "States": {
+                      "HelloWorld2": {
+                        "Type": "Task",
+                        "Resource": "${lambdaArn}",
+                        "End": true
+                      }
+                    }
+                  }
+                ],
+                "Next": "FinalState"
+              },
+              "FinalState": {
+                "Type": "Wait",
+                "Seconds": 5,
+                "End": true
+              }
+            }
+          }
+        - lambdaArn:
+            Fn::GetAtt: [TestLambda, Arn]
+      RoleArn:
+        Fn::GetAtt: [StepFunctionsExecutionRole, Arn]
+
+  ##
+  # API Gateway
+  ##
+
+  TestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: Test API
+      Description: Test API
+      Body:
+        swagger: '2.0'
+        info:
+          title: Test API
+          description: Test API
+        paths:
+          "/player/{id}":
+            get:
+              description: Returns a Player resource
+              produces:
+              - application/json
+              responses:
+                '200':
+                  description: A player resource.
+                  schema:
+                    "$ref": "#/definitions/Player"
+            parameters:
+            - name: id
+              in: path
+              description: Identifier of player to retreive
+              required: true
+              type: string
+        definitions:
+          Player:
+            type: object
+            properties:
+              playerId:
+                type: string
+              alias:
+                type: string
+              displayName:
+                type: string
+              profilePhotoUrl:
+                type: string
+            required:
+            - playerId
+            - alias

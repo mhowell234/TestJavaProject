@@ -1,0 +1,39 @@
+swagger: '2.0'
+info:
+  title: Test API
+  description: Test API
+tags:
+  - name: Player
+    description: Player API
+paths:
+  "/player/{id}":
+    get:
+      description: Returns a Player resource
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: A player resource.
+          schema:
+            "$ref": "#/definitions/Player"
+    parameters:
+    - name: id
+      in: path
+      description: Identifier of player to retreive
+      required: true
+      type: string
+definitions:
+  Player:
+    type: object
+    properties:
+      playerId:
+        type: string
+      alias:
+      type: string
+      displayName:
+        type: string
+      profilePhotoUrl:
+        type: string
+    required:
+    - playerId
+    - alias
