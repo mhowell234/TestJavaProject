@@ -6,14 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.howell.matt.model.Player;
+
 /**
  * Live templates
  */
-public class Test {
+public class Examples {
+    private static final String STRING = "A String";
+    private static final String ID = "ID";
+    private static final String NAME = "NAME";
+    private static final String PHOTO_URL = "http://somewhere";
 
-    public static final String STRING = "A String";
-
-    private Pojo pojo;
+    private final Pojo pojo;
 
     // psf
     public static final int a = 1;
@@ -29,14 +40,19 @@ public class Test {
     private FileOutputStream fileOutputStream;
 
     // psvm
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        Pojo pojo = Pojo.builder().aString("A").aBool(true).anInt(4).build();
-        Test test = new Test(pojo);
-        test.run();
+        final Player player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL);
+        final Pojo pojo = Pojo.builder().aString("A").aBool(true).anInt(4).player(player).build();
+
+        Examples examples = new Examples(pojo);
+        examples.testJsonObject();
+        examples.testJacksonMapperPlayer(player);
+        examples.testJacksonMapperPojo(pojo);
+        examples.run();
     }
 
-    public Test(final Pojo pojo) {
+    public Examples(final Pojo pojo) {
         this.pojo = pojo;
     }
 
@@ -53,6 +69,7 @@ public class Test {
 
         // anInt.for + tab
         for (char c1 : c) {
+
         }
 
         // Find:
@@ -82,7 +99,6 @@ public class Test {
 
         for (int j = 0; j < i.length; j++) {
             int i1 = i[j];
-
         }
 
         // opt + enter to list imports
@@ -111,8 +127,33 @@ public class Test {
         String s = (String) "adf";
 
         // Find usages fn + opt + f7
-
         System.out.println(pojo);
         map.put("aBool", 2);
+    }
+
+    public void testJsonObject() {
+        String jsonString = "{\"data\": {\"id\":1, \"name\":\"Matt\"}}";
+        JSONObject rootJO = new JSONObject(jsonString);
+        System.out.println(rootJO.toString());
+    }
+
+    public void testJacksonMapperPlayer(final Player player) throws JsonMappingException, JsonProcessingException {
+        System.out.println(getAsString(player));
+    }
+
+    public void testJacksonMapperPojo(final Pojo pojo) throws JsonMappingException, JsonProcessingException {
+        System.out.println(getAsString(pojo));
+    }
+
+    public static ObjectMapper getMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Jdk8Module());
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
+
+    public static <T> String getAsString(final T value) throws JsonMappingException, JsonProcessingException {
+        final ObjectMapper mapper = getMapper();
+        return mapper.writeValueAsString(value);
     }
 }
