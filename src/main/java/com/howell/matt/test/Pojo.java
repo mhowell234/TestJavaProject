@@ -1,4 +1,4 @@
-package com.howell.test;
+package com.howell.matt.test;
 
 import com.howell.matt.model.Player;
 

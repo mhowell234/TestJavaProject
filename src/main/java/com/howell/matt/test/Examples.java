@@ -1,4 +1,4 @@
-package com.howell.test;
+package com.howell.matt.test;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.stepfunctions.AWSStepFunctions;
+import com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder;
+import com.amazonaws.services.stepfunctions.model.ListStateMachinesRequest;
+import com.amazonaws.services.stepfunctions.model.ListStateMachinesResult;
+import com.amazonaws.services.stepfunctions.model.StateMachineListItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -50,6 +57,7 @@ public class Examples {
         examples.testJsonObject();
         examples.testJacksonMapperPlayer(player);
         examples.testJacksonMapperPojo(pojo);
+        examples.showStateMachines();
         examples.run();
     }
 
@@ -146,6 +154,15 @@ public class Examples {
         System.out.println(getAsString(pojo));
     }
 
+    public void showStateMachines() {
+        final AWSStepFunctions awsStepFunctions = awsStepFunctions();
+
+        final ListStateMachinesResult listStateMachinesResult = awsStepFunctions.listStateMachines(new ListStateMachinesRequest());
+        for (final StateMachineListItem stateMachineListItem : listStateMachinesResult.getStateMachines()) {
+            System.out.println(stateMachineListItem);
+        }
+    }
+
     public static ObjectMapper getMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Jdk8Module());
@@ -153,7 +170,11 @@ public class Examples {
         return mapper;
     }
 
-    public static <T> String getAsString(final T value) throws JsonMappingException, JsonProcessingException {
+    public static AWSStepFunctions awsStepFunctions() {
+        return AWSStepFunctionsClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+    }
+
+    public static <T> String getAsString(final T value) throws JsonProcessingException {
         final ObjectMapper mapper = getMapper();
         return mapper.writeValueAsString(value);
     }
