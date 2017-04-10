@@ -9,6 +9,9 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.stepfunctions.AWSStepFunctions;
 import com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder;
 import com.amazonaws.services.stepfunctions.model.ListStateMachinesRequest;
@@ -58,6 +61,7 @@ public class Examples {
         examples.testJacksonMapperPlayer(player);
         examples.testJacksonMapperPojo(pojo);
         examples.showStateMachines();
+        examples.showS3Buckets();
         examples.run();
     }
 
@@ -156,11 +160,12 @@ public class Examples {
 
     public void showStateMachines() {
         final AWSStepFunctions awsStepFunctions = awsStepFunctions();
+        awsStepFunctions.listStateMachines(new ListStateMachinesRequest()).getStateMachines().forEach(System.out::println);
+    }
 
-        final ListStateMachinesResult listStateMachinesResult = awsStepFunctions.listStateMachines(new ListStateMachinesRequest());
-        for (final StateMachineListItem stateMachineListItem : listStateMachinesResult.getStateMachines()) {
-            System.out.println(stateMachineListItem);
-        }
+    public void showS3Buckets() {
+        final AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        amazonS3.listBuckets().stream().map(Bucket::getName).forEach(System.out::println);
     }
 
     public static ObjectMapper getMapper() {
