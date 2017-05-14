@@ -9,14 +9,19 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
+import com.amazonaws.services.lambda.model.FunctionConfiguration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.stepfunctions.AWSStepFunctions;
 import com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder;
 import com.amazonaws.services.stepfunctions.model.ListStateMachinesRequest;
-import com.amazonaws.services.stepfunctions.model.ListStateMachinesResult;
-import com.amazonaws.services.stepfunctions.model.StateMachineListItem;
+import com.amazonaws.services.stepfunctions.model.StartExecutionRequest;
+import com.amazonaws.services.stepfunctions.model.StartExecutionResult;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -60,8 +65,11 @@ public class Examples {
         examples.testJsonObject();
         examples.testJacksonMapperPlayer(player);
         examples.testJacksonMapperPojo(pojo);
+        examples.showLambdaFunctions();
         examples.showStateMachines();
         examples.showS3Buckets();
+        examples.showQueues();
+        examples.startStateMachines();
         examples.run();
     }
 
@@ -159,17 +167,34 @@ public class Examples {
     }
 
     public void showStateMachines() {
-        final AWSStepFunctions awsStepFunctions = awsStepFunctions();
-        awsStepFunctions.listStateMachines(new ListStateMachinesRequest()).getStateMachines().forEach(System.out::println);
+        final AWSStepFunctions stepFunctionsClient = awsStepFunctions();
+        stepFunctionsClient.listStateMachines(new ListStateMachinesRequest()).getStateMachines().forEach(System.out::println);
+    }
+
+    public void startStateMachines() {
+        final AWSStepFunctions stepFunctionsClient = awsStepFunctions();
+
+        final StartExecutionResult result = stepFunctionsClient.startExecution(new StartExecutionRequest().withStateMachineArn("arn:aws:states:us-west-2:707560230714:stateMachine:TestStateMachine-YFR96URIHFKM"));
+        System.out.println(result.getExecutionArn());
     }
 
     public void showS3Buckets() {
-        final AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
-        amazonS3.listBuckets().stream().map(Bucket::getName).forEach(System.out::println);
+        final AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        s3Client.listBuckets().stream().map(Bucket::getName).forEach(System.out::println);
+    }
+
+    public void showLambdaFunctions() {
+        final AWSLambda lambdaClient = AWSLambdaClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        lambdaClient.listFunctions().getFunctions().stream().map(FunctionConfiguration::getFunctionName).forEach(System.out::println);
+    }
+
+    public void showQueues() {
+        final AmazonSQS sqsClient = AmazonSQSClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        sqsClient.listQueues().getQueueUrls().forEach(System.out::println);
     }
 
     public static ObjectMapper getMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Jdk8Module());
         mapper.registerModule(new JavaTimeModule());
         return mapper;
