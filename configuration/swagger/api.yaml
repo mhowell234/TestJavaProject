@@ -11,6 +11,9 @@ paths:
       description: Returns a Player resource
       produces:
       - application/json
+      operationId: getPlayer
+      tags:
+      - Player
       responses:
         '200':
           description: A player resource.

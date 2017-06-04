@@ -11,19 +11,34 @@
     <packaging>jar</packaging>
 
     <properties>
-        <aws.version>1.11.127</aws.version>
+        <aws.version>1.11.140</aws.version>
         <checkstyle.version>2.17</checkstyle.version>
         <findbugs.version>3.0.4</findbugs.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jackson.version>2.8.8</jackson.version>
+        <jackson.version>2.9.0.pr3</jackson.version>
+        <jacoco.version>0.7.9</jacoco.version>
         <java.version>1.8</java.version>
+        <javadoc.version>2.10.4</javadoc.version>
         <okhttp.version>2.7.5</okhttp.version>
+        <pmd.version>3.8</pmd.version>
         <swagger.codegen.version>2.2.2</swagger.codegen.version>
     </properties>
 
+    <prerequisites>
+        <maven>3.0.1</maven>
+    </prerequisites>
+
     <dependencies>
 
-        <!-- AWS -->
+        <!-- ANT -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.10.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- AWS Packages -->
 
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -97,7 +112,7 @@
             <version>${aws.version}</version>
         </dependency>
 
-        <!-- Jackson -->
+        <!-- Jackson Packages -->
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -141,7 +156,7 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- Google -->
+        <!-- Google Packages -->
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -173,7 +188,7 @@
             <version>0.32</version>
         </dependency>
 
-        <!-- okhttp -->
+        <!-- okhttp Packages -->
 
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
@@ -188,28 +203,20 @@
         </dependency>
 
         <!-- Swagger -->
-
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-codegen-cli</artifactId>
             <version>${swagger.codegen.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-maven-plugin</artifactId>
-            <version>${swagger.codegen.version}</version>
-        </dependency>
-
         <!-- Javax -->
-
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
 
-        <!-- Apache Commons -->
+        <!-- Apache Commons Packages -->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -229,25 +236,7 @@
             <version>3.6.1</version>
         </dependency>
 
-        <!-- AssertJ -->
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.6.2</version>
-        </dependency>
-
-
-        <!-- Checkstyle -->
-
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>${checkstyle.version}</version>
-            <type>maven-plugin</type>
-        </dependency>
-
-        <!-- Hamcrest -->
+        <!-- Hamcrest Packages -->
 
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -262,7 +251,6 @@
         </dependency>
 
         <!-- Jooq -->
-
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jool</artifactId>
@@ -270,49 +258,123 @@
         </dependency>
 
         <!-- Json -->
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20160810</version>
-        </dependency>
-
-        <!-- Junit -->
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.0.0-M4</version>
+            <version>20170516</version>
         </dependency>
 
         <!-- Lombok -->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.16</version>
         </dependency>
 
-        <!-- Mockito -->
+        <!-- Test dependencies -->
 
+        <!-- AssertJ -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.6.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Junit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.0.0-M4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.16.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${jacoco.version}</version>
+            <scope>test</scope>
+            <classifier>runtime</classifier>
+        </dependency>
+
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <version>2.0.2-beta</version>
+            <!--<version>1.10.19</version>-->
+            <scope>test</scope>
         </dependency>
 
-        <!-- FindBugs -->
-
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>${findbugs.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+
+                <!-- Findbugs -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>${findbugs.version}</version>
+                    <configuration>
+                        <effort>Max</effort>
+                        <threshold>Low</threshold>
+                        <excludeFilterFile>configuration/findbugs/findbugs-exclude.xml</excludeFilterFile>
+                        <includeFilterFile>configuration/findbugs/findbugs-include.xml</includeFilterFile>
+                    </configuration>
+                </plugin>
+
+                <!-- Javadoc -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${javadoc.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <failOnError>true</failOnError>
+                        <linksource>true</linksource>
+                        <tags>
+                            <tag>
+                                <name>noinspection</name>
+                                <placement>X</placement>
+                            </tag>
+                        </tags>
+                    </configuration>
+                </plugin>
+
+                <!-- PMD -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${pmd.version}</version>
+                    <configuration>
+                        <targetJdk>${java.version}</targetJdk>
+                        <minimumTokens>20</minimumTokens>
+                        <skipEmptyReport>false</skipEmptyReport>
+                        <failOnViolation>true</failOnViolation>
+                        <printFailingErrors>true</printFailingErrors>
+                        <rulesets>
+                            <ruleset>configuration/pmd/pmd.xml</ruleset>
+                        </rulesets>
+                        <excludeRoots>
+                            <excludeRoot>target/generated-sources/swagger/src/gen/java</excludeRoot>
+                        </excludeRoots>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
 
+            <!-- Swagger -->
             <plugin>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -336,9 +398,25 @@
                 </executions>
             </plugin>
 
+            <!-- Jacoco -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+            </plugin>
+
+            <!-- Maven -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -347,24 +425,70 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle.version}</version>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
                 <executions>
                     <execution>
-                        <id>checkstyle</id>
-                        <phase>validate</phase>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>1.8</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+
+            <!-- Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <failOnViolation>true</failOnViolation>
+                    <includeResources>false</includeResources>
+                    <includeTestResources>false</includeTestResources>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <maxAllowedViolations>0</maxAllowedViolations>
+                    <violationSeverity>error</violationSeverity>
+                    <propertyExpansion>project.basedir=${project.basedir}</propertyExpansion>
+                    <sourceDirectory>${project.basedir}/src</sourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <failOnViolation>false</failOnViolation>
-                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -372,11 +496,46 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>de.thetaphi</groupId>
+                <artifactId>forbiddenapis</artifactId>
+                <version>2.3</version>
                 <configuration>
-                    <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
-                    <includeFilterFile>findbugs-include.xml</includeFilterFile>
+                    <targetVersion>${java.version}</targetVersion>
+                    <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                    <bundledSignatures>
+                        <bundledSignature>jdk-unsafe</bundledSignature>
+                        <bundledSignature>jdk-deprecated</bundledSignature>
+                        <bundledSignature>jdk-system-out</bundledSignature>
+                        <bundledSignature>jdk-non-portable</bundledSignature>
+                    </bundledSignatures>
+                    <excludes>
+                        <exclude>com/howell/matt/invoker/*</exclude>
+                    </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>testCheck</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>edu.illinois</groupId>
+                <artifactId>nondex-maven-plugin</artifactId>
+                <version>1.1.1</version>
             </plugin>
 
         </plugins>
@@ -384,6 +543,85 @@
 
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>cobertura</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <quiet>false</quiet>
+                    <formats>
+                        <format>xml</format>
+                        <format>html</format>
+                    </formats>
+                    <check/>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <dataFile>${project.build.directory}/jacoco/jacoco.exec</dataFile>
+                    <excludes>
+                    </excludes>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${pmd.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>pmd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
