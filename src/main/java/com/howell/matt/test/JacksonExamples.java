@@ -79,6 +79,7 @@ public class JacksonExamples {
      * Main.
      *
      * @param args args
+     * @throws JsonProcessingException exception parsing object
      */
     public static void main(String[] args) throws JsonProcessingException {
         final Player player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL).alias(ALIAS);
@@ -115,7 +116,7 @@ public class JacksonExamples {
      * Convert a test pojo to a string and log it.
      *
      * @param testPojo test pojo
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException exception converting object
      */
     public void mapTestPojoToString(final TestPojo testPojo) throws JsonProcessingException {
         log.info(getAsString(testPojo));
