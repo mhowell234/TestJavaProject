@@ -1,0 +1,145 @@
+import io.swagger.codegen.DefaultGenerator
+import io.swagger.codegen.config.CodegenConfigurator
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('io.swagger:swagger-codegen:2.2.3')
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.howell.matt'
+version = '1.0-SNAPSHOT'
+description = """"""
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    generatedCompile
+}
+
+dependencies {
+
+    generatedCompile group: 'com.google.code.gson', name: 'gson', version:'[2,)'
+    generatedCompile group: 'com.squareup.okhttp', name: 'logging-interceptor', version:'[2.7,)'
+    generatedCompile group: 'com.squareup.okhttp', name: 'okhttp', version:'[2.7,)'
+    generatedCompile group: 'io.swagger', name: 'swagger-annotations', version:'1.5.0'
+
+    compile group: 'com.amazon.alexa', name: 'alexa-skills-kit', version: '[1.4,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-api-gateway', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-autoscaling', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-cloudformation', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-dax', version: '[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-emr', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-kinesis', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-machinelearning', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-route53', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-sns', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-stepfunctions', version:'[1.11,)'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-sts', version:'[1.11,)'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-avro', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-ion', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-protobuf', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformats-binary', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformats-text', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '[2.9,)'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '[2.9,)'
+    compile group: 'com.google.dagger', name: 'dagger', version:'[2,)'
+    compile group: 'com.google.guava', name: 'guava', version:'21.0'
+    compile group: 'com.google.inject', name: 'guice', version:'4.1.0'
+    compile group: 'com.google.truth', name: 'truth', version:'[0,)'
+    compile group: 'io.swagger', name: 'swagger-codegen-cli', version:'[2.2,)'
+    compile group: 'javax.inject', name: 'javax.inject', version:'1'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version:'[4,)'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'[3,)'
+    compile group: 'org.apache.commons', name: 'commons-math3', version:'[3,)'
+    compile group: 'org.hamcrest', name: 'hamcrest-core', version:'1.3'
+    compile group: 'org.hamcrest', name: 'hamcrest-library', version:'1.3'
+    compile group: 'org.jooq', name: 'jool', version:'[0,)'
+    compile group: 'org.json', name: 'json', version:'20170516'
+    compile group: 'org.projectlombok', name: 'lombok', version:'[1,)'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version:'[1.2,)'
+
+    testCompile group: 'org.assertj', name: 'assertj-core', version:'3.6.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.0.0-M4'
+    testCompile group: 'com.github.stefanbirkner', name: 'system-rules', version:'1.16.1'
+    testCompile group: 'org.jacoco', name: 'org.jacoco.agent', version:'0.7.9', classifier:'runtime'
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'[2,)'
+
+    runtime group: 'com.squareup.okhttp', name: 'logging-interceptor', version:'[2.7,)'
+    runtime group: 'com.squareup.okhttp', name: 'okhttp', version:'[2.7,)'
+    runtime group: 'com.google.code.gson', name: 'gson', version:'[2,)'
+}
+
+def swaggerSourceFile = "configuration/swagger/api.yaml"
+def swaggerTargetFolder = 'src/generated/java'
+
+task generateApi {
+    inputs.file("$projectDir/$swaggerSourceFile")
+    outputs.dir("$projectDir/$swaggerTargetFolder")
+    doLast{
+        def config = new CodegenConfigurator()
+
+        config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+        config.setOutputDir("$projectDir")
+        config.setLang('java')
+        config.setAdditionalProperties([
+                'apiPackage'    : 'com.howell.matt.api',
+                'invokerPackage': 'com.howell.matt.invoker',
+                'modelPackage'  : 'com.howell.matt.model',
+                'dateLibrary'   : 'java8',
+                'sourceFolder'  : swaggerTargetFolder
+        ])
+        new DefaultGenerator().opts(config.toClientOptInput()).generate()
+    }
+}
+
+clean.doFirst {
+    delete("${projectDir}/$swaggerTargetFolder")
+}
+
+sourceSets {
+    generated {
+        compileClasspath = configurations.generatedCompile
+    }
+    main {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+    test {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+}
+
+jar {
+    from sourceSets.generated.output
+}
+
+classes.dependsOn generatedClasses
+compileGeneratedJava.dependsOn generateApi
+compileJava.dependsOn compileGeneratedJava
+ideaModule.dependsOn generateApi
+

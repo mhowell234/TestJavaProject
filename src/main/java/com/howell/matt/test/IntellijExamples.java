@@ -71,9 +71,11 @@ public final class IntellijExamples {
 
         // opt + enter to list imports
         // shift + ctrl + space after new to auto complete instant
+        //<editor-fold desc="Stuff">
         final Map<String, Integer> map = new HashMap<>();
 
         map.put("aString", 1);
+        //</editor-fold>
 
         // map.put(). cursor inside Parens...cmd + P to show params
 

@@ -2,9 +2,13 @@ package com.howell.matt.test;
 
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.howell.matt.model.Player;
 
@@ -57,8 +61,16 @@ public class JacksonExamples {
      */
     public static ObjectMapper getMapper() {
         final ObjectMapper mapper = new ObjectMapper();
+
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         mapper.registerModule(new Jdk8Module());
         mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new JodaModule());
+
         return mapper;
     }
 

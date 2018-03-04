@@ -8,5 +8,26 @@
 *.war
 *.ear
 
+# exclude jar for gradle wrapper
+!gradle/wrapper/*.jar
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# build files
+**/target
+target
+.gradle
+build
+.idea
+.swagger-codegen
+*.sbt
+.travis.yml
+gradlew*
+gradle*
+*.iml
+docs
+git_push.sh
+src/generated/
+src/main/AndroidManifest.xml
+src/test/
