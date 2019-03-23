@@ -26,7 +26,7 @@ public class S3Examples {
      * Show S3 buckets.
      */
     public void showS3Buckets() {
-        final AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        final var s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
         s3Client.listBuckets().stream().map(Bucket::getName).forEach(log::info);
     }
 }

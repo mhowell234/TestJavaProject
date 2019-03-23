@@ -72,7 +72,7 @@ public final class IntellijExamples {
         // opt + enter to list imports
         // shift + ctrl + space after new to auto complete instant
         //<editor-fold desc="Stuff">
-        final Map<String, Integer> map = new HashMap<>();
+        final var map = new HashMap<String, Integer>();
 
         map.put("aString", 1);
         //</editor-fold>
@@ -96,23 +96,23 @@ public final class IntellijExamples {
 
         map.put("aBool", 2);
 
-        final char[] charList = new char[] {'A', 'b', 'c'};
+        final var charList = new char[] {'A', 'b', 'c'};
 
         // itar
-        for (int i = 0; i < charList.length; i++) {
-            char charEntry = charList[i];
+        for (var i = 0; i < charList.length; i++) {
+            var charEntry = charList[i];
             log.info("{}", charEntry);
         }
 
         // anInt.for + tab
-        for (char charEntry : charList) {
+        for (var charEntry : charList) {
             log.info("{}", charEntry);
         }
 
-        final int[] intList = new int[] {1, 2, 3};
+        final var intList = new int[] {1, 2, 3};
 
-        for (int j = 0; j < intList.length; j++) {
-            final int i1 = intList[j];
+        for (var j = 0; j < intList.length; j++) {
+            final var i1 = intList[j];
             log.info("{}", i1);
         }
     }

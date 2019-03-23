@@ -31,7 +31,7 @@ public class StepFunctionsExamples {
      * @param args args
      */
     public static void main(final String[] args) {
-        final StepFunctionsExamples examples = new StepFunctionsExamples();
+        final var examples = new StepFunctionsExamples();
 
         examples.startStateMachines();
         examples.showStateMachines();
@@ -41,7 +41,7 @@ public class StepFunctionsExamples {
      * Show state machines.
      */
     public void showStateMachines() {
-        final AWSStepFunctions stepFunctionsClient = awsStepFunctions();
+        final var stepFunctionsClient = awsStepFunctions();
         stepFunctionsClient.listStateMachines(new ListStateMachinesRequest()).getStateMachines().stream().map
             (StateMachineListItem::getStateMachineArn).forEach(log::info);
     }
@@ -50,9 +50,9 @@ public class StepFunctionsExamples {
      * Start state machines.
      */
     public void startStateMachines() {
-        final AWSStepFunctions stepFunctionsClient = awsStepFunctions();
+        final var stepFunctionsClient = awsStepFunctions();
 
-        final StartExecutionResult result = stepFunctionsClient.startExecution(new StartExecutionRequest()
+        final var result = stepFunctionsClient.startExecution(new StartExecutionRequest()
             .withStateMachineArn("arn:aws:states:us-west-2:707560230714:stateMachine:TestStateMachine-YFR96URIHFKM"));
         log.info(result.getExecutionArn());
     }

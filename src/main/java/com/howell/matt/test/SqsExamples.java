@@ -25,7 +25,7 @@ public class SqsExamples {
      * Show SQS queues.
      */
     public void showQueues() {
-        final AmazonSQS sqsClient = AmazonSQSClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        final var sqsClient = AmazonSQSClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
         sqsClient.listQueues().getQueueUrls().forEach(log::info);
     }
 }

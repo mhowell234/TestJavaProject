@@ -57,7 +57,7 @@ public final class BitwiseExamples {
      * @return average time
      */
     public static long averageTime(final Function<Integer, Boolean> func, final Integer value) {
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        var stopwatch = Stopwatch.createStarted();
         int loopIteration = 0;
         for (; loopIteration < ITERATIONS; loopIteration++) {
             func.apply(value);

@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('io.swagger:swagger-codegen:2.2.3')
+        classpath('io.swagger:swagger-codegen:3.0.0-rc1')
     }
 }
 
@@ -17,8 +17,8 @@ apply plugin: 'maven'
 group = 'com.howell.matt'
 version = '1.0-SNAPSHOT'
 description = """"""
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_HIGHER
+targetCompatibility = JavaVersion.VERSION_HIGHER
 
 repositories {
     mavenCentral()
@@ -33,7 +33,7 @@ dependencies {
     generatedCompile group: 'com.google.code.gson', name: 'gson', version:'[2,)'
     generatedCompile group: 'com.squareup.okhttp', name: 'logging-interceptor', version:'[2.7,)'
     generatedCompile group: 'com.squareup.okhttp', name: 'okhttp', version:'[2.7,)'
-    generatedCompile group: 'io.swagger', name: 'swagger-annotations', version:'1.5.0'
+    generatedCompile group: 'io.swagger', name: 'swagger-annotations', version:'2.0.0-rc2'
 
     compile group: 'com.amazon.alexa', name: 'alexa-skills-kit', version: '[1.4,)'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-api-gateway', version:'[1.11,)'
@@ -67,7 +67,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '[2.9,)'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '[2.9,)'
     compile group: 'com.google.dagger', name: 'dagger', version:'[2,)'
-    compile group: 'com.google.guava', name: 'guava', version:'21.0'
+    compile group: 'com.google.guava', name: 'guava', version:'27.1-jre'
     compile group: 'com.google.inject', name: 'guice', version:'4.1.0'
     compile group: 'com.google.truth', name: 'truth', version:'[0,)'
     compile group: 'io.swagger', name: 'swagger-codegen-cli', version:'[2.2,)'
@@ -109,7 +109,7 @@ task generateApi {
                 'apiPackage'    : 'com.howell.matt.api',
                 'invokerPackage': 'com.howell.matt.invoker',
                 'modelPackage'  : 'com.howell.matt.model',
-                'dateLibrary'   : 'java8',
+                'dateLibrary'   : 'java12',
                 'sourceFolder'  : swaggerTargetFolder
         ])
         new DefaultGenerator().opts(config.toClientOptInput()).generate()

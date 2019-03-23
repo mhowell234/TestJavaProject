@@ -60,7 +60,7 @@ public class JacksonExamples {
      * @return Object mapper
      */
     public static ObjectMapper getMapper() {
-        final ObjectMapper mapper = new ObjectMapper();
+        final var mapper = new ObjectMapper();
 
         mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
@@ -83,7 +83,7 @@ public class JacksonExamples {
      * @throws JsonProcessingException exception converting object
      */
     public static <T> String getAsString(final T value) throws JsonProcessingException {
-        final ObjectMapper mapper = getMapper();
+        final var mapper = getMapper();
         return mapper.writeValueAsString(value);
     }
 
@@ -94,10 +94,10 @@ public class JacksonExamples {
      * @throws JsonProcessingException exception parsing object
      */
     public static void main(String[] args) throws JsonProcessingException {
-        final Player player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL).alias(ALIAS);
-        final TestPojo testPojo = TestPojo.builder().aString("A").aBool(true).anInt(4).player(player).build();
+        final var player = new Player().playerId(ID).displayName(NAME).profilePhotoUrl(PHOTO_URL).alias(ALIAS);
+        final var testPojo = TestPojo.builder().aString("A").aBool(true).anInt(4).player(player).build();
 
-        final JacksonExamples examples = new JacksonExamples(testPojo);
+        final var examples = new JacksonExamples(testPojo);
 
         examples.convertToJsonObject();
         examples.mapPlayerToString(player);
@@ -109,8 +109,8 @@ public class JacksonExamples {
      * Conversion to JSON object.
      */
     public void convertToJsonObject() {
-        final String jsonString = "{\"data\": {\"id\":1, \"name\":\"Matt\"}}";
-        final JSONObject rootJO = new JSONObject(jsonString);
+        final var jsonString = "{\"data\": {\"id\":1, \"name\":\"Matt\"}}";
+        final var rootJO = new JSONObject(jsonString);
         log.info(rootJO.toString());
     }
 

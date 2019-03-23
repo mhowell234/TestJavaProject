@@ -17,7 +17,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <jackson.version>[2.9,)</jackson.version>
         <jacoco.version>0.7.9</jacoco.version>
-        <java.version>1.8</java.version>
+        <java.version>12</java.version>
         <javadoc.version>2.10.4</javadoc.version>
 
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>

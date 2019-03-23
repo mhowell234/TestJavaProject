@@ -1,7 +1,6 @@
 package com.howell.matt.test;
 
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
 import com.amazonaws.services.lambda.model.FunctionConfiguration;
 
@@ -26,7 +25,7 @@ public class LambdaExamples {
      * Show lambda functions.
      */
     public void showLambdaFunctions() {
-        final AWSLambda lambdaClient = AWSLambdaClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
+        final var lambdaClient = AWSLambdaClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
         lambdaClient.listFunctions().getFunctions().stream().map(FunctionConfiguration::getFunctionName).forEach
             (log::info);
     }
